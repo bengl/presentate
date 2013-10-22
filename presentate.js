@@ -1,3 +1,22 @@
+function progressive(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    if (typeof arr[i] === 'function') arr[i] = arr[i]();
+    if (i === 0) continue;
+    arr[i] = arr[i-1] + arr[i];
+  }
+}
+function flatten(a) {
+  var r = [];
+  for(var i=0; i<a.length; i++){
+    if(Array.isArray(a[i])){
+      r = r.concat(a[i]);
+    }else{
+      r.push(a[i]);
+    }
+  }
+  return r;
+}
+
 
 function presentate(slides, stdin, stdout, b){
 
@@ -12,6 +31,12 @@ function presentate(slides, stdin, stdout, b){
     write("[2J[1;1H"); // clear screen and return to top left
     write(slides[n]);
   }
+
+  // deal with progressive slides
+  for (var i = 0; i < slides.length; i++) {
+    if (Array.isArray(slides[i])) progressive(slides[i]);
+  }
+  slides = flatten(slides);
 
   stdin.setRawMode(true);
   write("[?25l"); //hide cursor
@@ -37,7 +62,6 @@ function presentate(slides, stdin, stdout, b){
         }
         break;
       default:
-        //console.log('Unrecognized sequence:', key);
         break;
     }
   });
@@ -49,8 +73,8 @@ if (require.main === module) {
   var path = require('path');
 
   var slides = require(path.resolve(process.cwd(), 'pslides')).map(function(s){
-    if (typeof s === 'function') return s().toString();
-    else return s.toString();
+    if (typeof s === 'function') return s();
+    else return s;
   });
 
   presentate(slides, process.stdin, process.stdout);

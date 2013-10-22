@@ -6,12 +6,14 @@ var demoColors = "red|yellow|green|blue|white|grey|cyan|rainbow|magenta|underlin
 
 
 var slides = [
-'\n    {bold}{underline}Presentate{/underline}{/bold} allows you to make\n    command-line presentations using node.js',
-'\n    Use left and right arrow keys to navigate.',
-'\n    You can use {rainbow}colors.js{/rainbow} if you want.',
-'\n    You can use {rainbow}colors.js{/rainbow} if you want.\n    It\'s not included, but I recommend it.',
-'\n    You can use {rainbow}colors.js{/rainbow} if you want.\n    It\'s not included, but I recommend it.\n\n    For example...'
-].map(function(s){return colorsTmpl(s)});
+  colorsTmpl('\n    {bold}{underline}Presentate{/underline}{/bold} allows you to make\n    command-line presentations using node.js'),
+  '\n    Use left and right arrow keys to navigate.',
+  [
+    colorsTmpl('\n    You can use {rainbow}colors.js{/rainbow} if you want.'),
+    '\n    It\'s not included, but I recommend it.',
+    '\n\n    For example...'
+  ]
+];
 
 slides = slides.concat(demoColors);
 slides.push("\n    https://github.com/bengl/presentate\n\n    Fork it! Use it!\n\n    -- @bengl");
