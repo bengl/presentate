@@ -87,10 +87,20 @@ function presentate(slides, stdin, stdout, b){
   });
 };
 
-module.exports = presentate
+module.exports = presentate;
 
 if (require.main === module) {
-  var slides = require(require('path').resolve(process.cwd(), 'pslides'));
-  presentate(slides, process.stdin, process.stdout);
+  var port, slideFileName = require('path').resolve(process.cwd(), 'pslides.js');
+  for (var i = 2; i < process.argv.length; i++) {
+    if (process.argv[i].match(/.*\.js$/))
+      slideFileName = process.argv[i];
+    if (!isNaN(parseInt(process.argv[i])))
+      port = parseInt(process.argv[i]);
+  }
+  var slides = require(slideFileName.replace(/\.js$/, ''));
+  if (port) {
+    require('./telnet')(slides); 
+  } else {
+    presentate(slides, process.stdin, process.stdout);
+  }
 }
-

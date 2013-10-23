@@ -2,24 +2,28 @@ var net = require('net'),
     presentate = require('./presentate'),
     stream = require('stream');
 
-var display = new stream.PassThrough();
-display.pipe(process.stdout);
 
-var clients = [];
-var slides = require('./pslides');
+function telnet(slides, port){ 
+  var display = new stream.PassThrough();
+  display.pipe(process.stdout);
 
-net.createServer(function(socket){
-  socket.write("[2J[1;1H");
-  socket.write(presentate.slides[presentate.currentSlide]);
-  clients.push(socket);
+  var clients = [];
+  var slides = require('./pslides');
 
-  display.pipe(socket);
+  net.createServer(function(socket){
+    socket.write("[2J[1;1H");
+    socket.write(presentate.slides[presentate.currentSlide]);
+    clients.push(socket);
 
-  socket.on('end', function () {
-    display.unpipe(socket);
-    clients.splice(clients.indexOf(socket), 1);
-  });
-}).listen(9000);
+    display.pipe(socket);
 
-presentate(slides, process.stdin, display, process.exit)
+    socket.on('end', function () {
+      display.unpipe(socket);
+      clients.splice(clients.indexOf(socket), 1);
+    });
+  }).listen(port);
 
+  presentate(slides, process.stdin, display, process.exit);
+}
+
+module.exports = telnet;
