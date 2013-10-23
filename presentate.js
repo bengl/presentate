@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var colorsTmpl = require('colors-tmpl');
 
 function progressive(arr) {
