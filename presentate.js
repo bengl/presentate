@@ -35,12 +35,10 @@ function presentate(slides, stdin, stdout, b){
   var keypress = require('keypress');
   keypress(stdin);
   
-  var currentSlide;
-  
   function showSlide(n){
-    currentSlide = n;
+    presentate.currentSlide = n;
     write("[2J[1;1H"); // clear screen and return to top left
-    write(slides[n]);
+    write(presentate.slides[n]);
   }
 
   // deal with progressive slides
@@ -50,7 +48,7 @@ function presentate(slides, stdin, stdout, b){
   }
 
   // flatten and color
-  slides = flatten(slides).map(colorify);
+  presentate.slides = flatten(slides).map(colorify);
   //console.log(JSON.stringify(slides)); process.exit(0);
 
   stdin.setRawMode(true);
@@ -58,13 +56,14 @@ function presentate(slides, stdin, stdout, b){
   showSlide(0); // show the first slide
 
   stdin.on('keypress', function(chunk, key){
+    var currentSlide = presentate.currentSlide;
     switch (key.name) {
       case 'left':
         if (currentSlide > 0) showSlide(currentSlide - 1);
         break;
       case 'right':
       case 'space':
-        if (currentSlide < slides.length - 1) showSlide(currentSlide + 1);
+        if (currentSlide < presentate.slides.length - 1) showSlide(currentSlide + 1);
         break;
       case 'escape':
       case 'q':
