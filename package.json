@@ -4,17 +4,15 @@
   "description": "A command-line presentation tool.",
   "main": "presentate.js",
   "dependencies": {
-    "keypress": "~0.2.1"
-  },
-  "devDependencies": {
+    "keypress": "~0.2.1",
     "colors-tmpl": "~0.1.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node presentate"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bengl/presentate"
+    "url": "https://github.com/bengl/presentate.git"
   },
   "keywords": [
     "presentations",

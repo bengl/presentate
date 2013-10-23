@@ -1,3 +1,5 @@
+var colorsTmpl = require('colors-tmpl');
+
 function progressive(arr) {
   for (var i = 0; i < arr.length; i++) {
     if (typeof arr[i] === 'function') arr[i] = arr[i]();
@@ -15,6 +17,13 @@ function flatten(a) {
     }
   }
   return r;
+}
+function colorify(string){
+  var newString = string.replace(/\{raw\}(.*?)\{\/raw\}/g, function(m, r) {
+    return '{raw}'+r.replace(/\{/g, "OPENBRACKET")+'{/raw}';
+  });
+  newString = colorsTmpl(newString);
+  return newString.replace(/\{\/?raw\}/g,'').replace(/OPENBRACKET/g, '{');
 }
 
 
@@ -35,8 +44,12 @@ function presentate(slides, stdin, stdout, b){
   // deal with progressive slides
   for (var i = 0; i < slides.length; i++) {
     if (Array.isArray(slides[i])) progressive(slides[i]);
+    if (typeof slides[i] === 'function') slides[i] = slides[i]();
   }
-  slides = flatten(slides);
+
+  // flatten and color
+  slides = flatten(slides).map(colorify);
+  //console.log(JSON.stringify(slides)); process.exit(0);
 
   stdin.setRawMode(true);
   write("[?25l"); //hide cursor
