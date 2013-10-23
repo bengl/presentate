@@ -12,7 +12,13 @@ Now, if you've installed presentate with `-g`, you can open up your presentation
 ```
 $ presentate
 ``` 
-And then you can quit your presentation by pressing Q or ESC.
+And then you can quit your presentation by pressing Q or ESC. 
+
+If you pass in a filename ending in JS as an argument, it will try to open that file as the slides file (using node's `require`), instead of pslides.js.
+
+If you pass in an integer as an argument, it will try to bind to that port number as a telnet server, so your presentation will also be available to people connecting to that port! This is useful in cases where video/visuals are unavailable or unsuitable, for remote sessions, or just for grins.
+
+You may use both of the possible arguments at the same time if you want, in any order.
 
 ## Advanced usage
 
@@ -20,7 +26,7 @@ If you include presentate in your node application, you can require it. The expo
 ```
 require('presentate')(slides, inputStream, outputStream, cb);
 ```
-Where the `slides` are an array as above, `inputStream` is a readable stream and `outputStream` is a writable stream. You can use `process.stdin` and `process.stdout` for the default behavior, but you can get more creative if you want, and make, for example, telnet presentation servers. The presentation starts when you call the `presentate` function, and calls `cb` when the presentation finishes (by pressing Q or ESC in the presentation);
+Where the `slides` are an array as above, `inputStream` is a readable stream and `outputStream` is a writable stream. You can use `process.stdin` and `process.stdout` for the default behavior. The presentation starts when you call the `presentate` function, and calls `cb` when the presentation finishes (by pressing Q or ESC in the presentation);
  
 ## TODO
 
