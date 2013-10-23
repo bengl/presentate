@@ -35,10 +35,16 @@ function presentate(slides, stdin, stdout, b){
   var keypress = require('keypress');
   keypress(stdin);
   
-  function showSlide(n){
+  function showSlide(n, prev){
     presentate.currentSlide = n;
-    write("[2J[1;1H"); // clear screen and return to top left
-    write(presentate.slides[n]);
+    var thisSlide = presentate.slides[n];
+    var prevSlide = presentate.slides[prev];
+    if (thisSlide.indexOf(prevSlide) !== 0) {
+      write("[2J[1;1H"); // clear screen and return to top left
+      write(thisSlide);
+    } else {
+      write(thisSlide.replace(prevSlide, ''));
+    }
   }
 
   // deal with progressive slides
@@ -59,11 +65,11 @@ function presentate(slides, stdin, stdout, b){
     var currentSlide = presentate.currentSlide;
     switch (key.name) {
       case 'left':
-        if (currentSlide > 0) showSlide(currentSlide - 1);
+        if (currentSlide > 0) showSlide(currentSlide - 1, currentSlide);
         break;
       case 'right':
       case 'space':
-        if (currentSlide < presentate.slides.length - 1) showSlide(currentSlide + 1);
+        if (currentSlide < presentate.slides.length - 1) showSlide(currentSlide + 1, currentSlide);
         break;
       case 'escape':
       case 'q':
@@ -87,3 +93,4 @@ if (require.main === module) {
   var slides = require(require('path').resolve(process.cwd(), 'pslides'));
   presentate(slides, process.stdin, process.stdout);
 }
+

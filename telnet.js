@@ -6,9 +6,7 @@ var display = new stream.PassThrough();
 display.pipe(process.stdout);
 
 var clients = [];
-var slides = require('./pslides').map(function(s){
-  return s+'\n\n\n\n\n\n\n\n';
-});
+var slides = require('./pslides');
 
 net.createServer(function(socket){
   socket.write("[2J[1;1H");
