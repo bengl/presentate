@@ -20,7 +20,7 @@ If you include presentate in your node application, you can require it. The expo
 ```
 require('presentate')(slides, inputStream, outputStream, cb);
 ```
-Where the `slides` are an array as above, `inputStream` is a readable stream and `outputStream` is a writable stream. You can use `process.stdin` and `process.stdout` for the default behavior, but you can get more creative if you want, and make, for example, telnet presentation servers. The presentation starts when you call the `presentate`, and calls `cb` when the presentation finishes (by pressing Q or ESC in the presentation);
+Where the `slides` are an array as above, `inputStream` is a readable stream and `outputStream` is a writable stream. You can use `process.stdin` and `process.stdout` for the default behavior, but you can get more creative if you want, and make, for example, telnet presentation servers. The presentation starts when you call the `presentate` function, and calls `cb` when the presentation finishes (by pressing Q or ESC in the presentation);
  
 ## TODO
 
