@@ -1,7 +1,7 @@
 {
   "name": "presentate",
-  "version": "0.0.1",
-  "description": "A command-line presentation tool.",
+  "version": "0.0.2",
+  "description": "A command-line and telnet presentation tool.",
   "main": "presentate.js",
   "dependencies": {
     "keypress": "~0.2.1",
