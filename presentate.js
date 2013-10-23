@@ -83,12 +83,6 @@ function presentate(slides, stdin, stdout, b){
 module.exports = presentate
 
 if (require.main === module) {
-  var path = require('path');
-
-  var slides = require(path.resolve(process.cwd(), 'pslides')).map(function(s){
-    if (typeof s === 'function') return s();
-    else return s;
-  });
-
+  var slides = require(require('path').resolve(process.cwd(), 'pslides'));
   presentate(slides, process.stdin, process.stdout);
 }
