@@ -99,7 +99,7 @@ if (require.main === module) {
   }
   var slides = require(slideFileName.replace(/\.js$/, ''));
   if (port) {
-    require('./telnet')(slides); 
+    require('./telnet')(slides, port); 
   } else {
     presentate(slides, process.stdin, process.stdout);
   }
