@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 
-var colorsTmpl = require('colors-tmpl');
+var colorsTmpl = require('colors-tmpl'),
+    keypress = require('keypress'),
+    net = require('net'),
+    stream = require('stream');
 
 function progressive(arr) {
   for (var i = 0; i < arr.length; i++) {
@@ -9,17 +12,18 @@ function progressive(arr) {
     arr[i] = arr[i-1] + arr[i];
   }
 }
+
 function flatten(a) {
   var r = [];
-  for(var i=0; i<a.length; i++){
-    if(Array.isArray(a[i])){
+  for (var i=0; i<a.length; i++) {
+    if (Array.isArray(a[i])) 
       r = r.concat(a[i]);
-    }else{
+    else
       r.push(a[i]);
-    }
   }
   return r;
 }
+
 function colorify(string){
   var newString = string.replace(/\{raw\}(.*?)\{\/raw\}/g, function(m, r) {
     return '{raw}'+r.replace(/\{/g, "OPENBRACKET")+'{/raw}';
@@ -28,11 +32,47 @@ function colorify(string){
   return newString.replace(/\{\/?raw\}/g,'').replace(/OPENBRACKET/g, '{');
 }
 
+function telnet(slides, port){ 
+  var display = new stream.PassThrough();
+  display.pipe(process.stdout);
+
+  var clients = [];
+  var slides = require('./pslides');
+
+  net.createServer(function(socket){
+    socket.on('error', function(err){
+      if (err.code === 'ECONNRESET') return; // Dont' care about this.
+      throw err; // If it isn't this, it's a big deal.
+    });
+    socket.write("[2J[1;1H");
+    socket.write(presentate.slides[presentate.currentSlide]);
+    clients.push(socket);
+
+    display.pipe(socket);
+
+    socket.on('end', function () {
+      display.unpipe(socket);
+      clients.splice(clients.indexOf(socket), 1);
+    });
+  }).listen(port);
+
+  presentate(slides, process.stdin, display, process.exit);
+}
+
+function quit(write, cb) {
+  write("[0m[?25h"); //show cursor, reset colors, etc.
+  if (typeof cb === 'function') {
+    cb();
+  } else {
+    console.log('\n\n');
+    process.exit(0);
+  }
+}
 
 function presentate(slides, stdin, stdout, b){
 
   var write = function(x){stdout.write(x)};
-  var keypress = require('keypress');
+
   keypress(stdin);
   
   function showSlide(n, prev){
@@ -55,7 +95,6 @@ function presentate(slides, stdin, stdout, b){
 
   // flatten and color
   presentate.slides = flatten(slides).map(colorify);
-  //console.log(JSON.stringify(slides)); process.exit(0);
 
   stdin.setRawMode(true);
   write("[?25l"); //hide cursor
@@ -63,23 +102,23 @@ function presentate(slides, stdin, stdout, b){
 
   stdin.on('keypress', function(chunk, key){
     var currentSlide = presentate.currentSlide;
+    if (!key) return; // errors otherwise
     switch (key.name) {
       case 'left':
-        if (currentSlide > 0) showSlide(currentSlide - 1, currentSlide);
+        if (currentSlide > 0)
+          showSlide(currentSlide - 1, currentSlide);
         break;
       case 'right':
       case 'space':
-        if (currentSlide < presentate.slides.length - 1) showSlide(currentSlide + 1, currentSlide);
+        if (currentSlide < presentate.slides.length - 1)
+          showSlide(currentSlide + 1, currentSlide);
         break;
       case 'escape':
       case 'q':
-        write("[0m[?25h"); //show cursor, reset colors, etc.
-        if (typeof cb === 'function') {
-          cb();
-        } else {
-          console.log('\n\n');
-          process.exit(0);
-        }
+        quit(write, typeof cb === 'function' ? cb : null);
+        break;
+      case 'c':
+        if (key.ctrl) quit(write, typeof cb === 'function' ? cb : null);
         break;
       default:
         break;
@@ -99,7 +138,7 @@ if (require.main === module) {
   }
   var slides = require(slideFileName.replace(/\.js$/, ''));
   if (port) {
-    require('./telnet')(slides, port); 
+    telnet(slides, port); 
   } else {
     presentate(slides, process.stdin, process.stdout);
   }
