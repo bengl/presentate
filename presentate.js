@@ -61,15 +61,16 @@ function telnet(slides, port){
 
 function quit(write, cb) {
   write("[0m[?25h"); //show cursor, reset colors, etc.
+  write('\n\n');
   if (typeof cb === 'function') {
     cb();
   } else {
-    console.log('\n\n');
     process.exit(0);
   }
 }
 
-function presentate(slides, stdin, stdout, b){
+function presentate(slides, stdin, stdout, cb){
+  cb = typeof cb === 'function' ? cb : null;
 
   var write = function(x){stdout.write(x)};
 
@@ -85,6 +86,7 @@ function presentate(slides, stdin, stdout, b){
     } else {
       write(thisSlide.replace(prevSlide, ''));
     }
+    write('\n');
   }
 
   // deal with progressive slides
@@ -115,12 +117,10 @@ function presentate(slides, stdin, stdout, b){
         break;
       case 'escape':
       case 'q':
-        quit(write, typeof cb === 'function' ? cb : null);
+        quit(write, cb);
         break;
       case 'c':
-        if (key.ctrl) quit(write, typeof cb === 'function' ? cb : null);
-        break;
-      default:
+        if (key.ctrl) quit(write, cb);
         break;
     }
   });
