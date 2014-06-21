@@ -5,7 +5,8 @@
   "main": "presentate.js",
   "dependencies": {
     "keypress": "~0.2.1",
-    "colors-tmpl": "~0.1.0"
+    "colors-tmpl": "~0.1.0",
+    "commander": "^2.2.0"
   },
   "bin": "presentate.js",
   "scripts": {
