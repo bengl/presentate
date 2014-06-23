@@ -2,15 +2,17 @@
   "name": "presentate",
   "version": "0.0.4",
   "description": "A command-line and telnet presentation tool.",
-  "main": "presentate.js",
+  "main": "index.js",
   "dependencies": {
     "keypress": "~0.2.1",
     "colors-tmpl": "~0.1.0",
-    "commander": "^2.2.0"
+    "commander": "^2.2.0",
+    "consolehighlighter": "^0.1.5",
+    "ansi-html-stream": "0.0.3"
   },
-  "bin": "presentate.js",
+  "bin": "bin/presentate",
   "scripts": {
-    "test": "node presentate"
+    "test": "bin/presentate"
   },
   "repository": {
     "type": "git",

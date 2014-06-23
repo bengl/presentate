@@ -1,0 +1,32 @@
+{"top": 1, "left": 3}
+===
+{bold}{underline}Presentate{/underline}{/bold} allows you to make
+command-line presentations using node.js
+---
+Use left and right arrow keys to navigate.
+---
+You can use {rainbow}colors.js{/rainbow} if you want.{pause}
+It's included, as {bold}colors-tmpl{/bold}.{pause}
+
+For example...
+---
+{red}red{/red} {yellow}yellow{/yellow} {green}green{/green} {blue}blue{/blue}
+
+{zebra}zebra{/zebra} {underline}underline{/underline} {bold}bold{/bold}
+---
+You can even have syntax-highlighted code!
+
+{code:js}
+// example.js
+var x = 0;
+for (var i = 0; i < 100; i++) {
+  x += i;
+}
+console.log(x);
+{/code}
+---
+https://github.com/bengl/presentate
+
+Fork it! Use it!
+
+        -- @bengl

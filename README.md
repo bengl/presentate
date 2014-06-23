@@ -4,38 +4,62 @@
 
 ## Basic usage
 
-Create a file called `pslides.js`. This should be a node module that exports an array of "slides". A slide is just a string. Yep, that's it! Just a string. Unless it's an array. If it's an array, it'll be concatenated slide by slide for a cool progressive reveal effect (less cool than it sounds). See the provided `pslides.js` for details.
+Create a file called `slides.presentate`. Format it as you would any other text file. Separate the slides with a line consisting only of `---`. You can make a (almost) cool reveal effect by inserting `{pause}` where you want to stop rendering the slide. See the thirst slide in the included `slides.presentate` for details.
 
-You can use tags from [colors-templ](https://github.com/rvagg/colors-tmpl) to add some ANSI color codes, etc., to your presentation.
+You can set top and left padding for your presentation by adding a few lines at the top of your file like this:
+
+```
+{"top": 1, "left": 3}
+===
+```
+
+That first line must be well-formatted JSON, and the second line must be exactly `===` on its own line. These values can be overridden by command-line options.
+
+You can use tags from [colors-templ](https://github.com/rvagg/colors-tmpl) to add some ANSI color codes, etc., to your presentation. Raw codes are also supported.
 
 Now, if you've installed presentate with `-g`, you can open up your presentation by doing:
+
 ```
 $ presentate
-``` 
-And then you can quit your presentation by pressing Q or ESC. 
+```
 
-If you pass in a filename ending in JS as an argument, it will try to open that file as the slides file (using node's `require`), instead of pslides.js.
+And then you can quit your presentation by pressing Q or ESC.
 
-If you pass in an integer as an argument, it will try to bind to that port number as a telnet server, so your presentation will also be available to people connecting to that port! This is useful in cases where video/visuals are unavailable or unsuitable, for remote sessions, or just for grins.
+Here are the command-line options:
 
-You may use both of the possible arguments at the same time if you want, in any order.
+```
+  Usage: presentate [options]
+
+  Options:
+
+    -h, --help            output usage information
+    -V, --version         output the version number
+    -T --telnet [num]     telnet viewer port number (optional)
+    -t --top [num]        lines of padding from the top (default: 1)
+    -l --left [num]       columns of padding from the left (default: 3)
+    -f --file [filename]  a slides.js file (default: ./pslides.js)
+    -A --all              show all the slides at once, delimited by "\n---\n"
+    -H --html             generate HTML version of "--all" (ass your own CSS)
+```
 
 ## Advanced usage
 
 If you include presentate in your node application, you can require it. The exported object is a function, so you can call it like this:
+
+```javascript
+require('presentate')(slides, top, left, inputStream, outputStream, cb);
 ```
-require('presentate')(slides, inputStream, outputStream, cb);
-```
-Where the `slides` are an array as above, `inputStream` is a readable stream and `outputStream` is a writable stream. You can use `process.stdin` and `process.stdout` for the default behavior. The presentation starts when you call the `presentate` function, and calls `cb` when the presentation finishes (by pressing Q or ESC in the presentation);
+
+Where `slides` is a string that looks like a `.presentate` file, `top` is lines of padding from the top, `left` is columns of padding from the left, `inputStream` is a readable stream and `outputStream` is a writable stream. You can use `process.stdin` and `process.stdout` for the default behavior. The presentation starts when you call the `presentate` function, and calls `cb` when the presentation finishes (by pressing Q or ESC in the presentation);
  
 ## TODO
 
-* Top and left padding.
-* Options/config. 
+* PDF output
 * Slide templates.
 * Basic effects.
 * Interactive slides.
 * Slideshow mode.
+* Edit mode.
 
 ## License
 
