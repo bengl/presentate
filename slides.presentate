@@ -1,9 +1,11 @@
-{"top": 1, "left": 3}
+{"top": 0, "left": 0, "center": "auto", "notes": 12345}
 ===
 {bold}{underline}Presentate{/underline}{/bold} allows you to make
 command-line presentations using node.js
 ---
 Use left and right arrow keys to navigate.
+&&&
+Here are some example notes.
 ---
 You can use {rainbow}colors.js{/rainbow} if you want.{pause}
 It's included, as {bold}colors-tmpl{/bold}.{pause}

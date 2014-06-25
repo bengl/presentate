@@ -5,49 +5,49 @@ var fs = require('fs');
 
 program.version(require('../package').version)
   .usage('[options]')
-  .option('-T --telnet [num]', 'telnet viewer port number (optional)')
+  .option('-T --telnet [port]', 'telnet viewer port number')
   .option('-t --top [num]', 'lines of padding from the top (default: 1)')
   .option('-l --left [num]', 'columns of padding from the left (default: 3)')
-  .option('-f --file [filename]', 'a slides.js file (default: ./pslides.js)')
-  .option('-A --all ', 'show all the slides at once, delimited by "\\n---\\n"')
+  .option('-c --center [WxH]', 'center in the terminal, with width w and height H')
+  .option('-f --file [filename]', 'a slides.js file (default: ./slides.presentate)')
+  .option('-A --all', 'show all the slides at once, delimited by "\\n---\\n"')
+  .option('-N --notes [port]', 'telnet notes port number')
   .option('-H --html ', 'generate HTML version of "--all" (add your own CSS)')
   .parse(process.argv);
 
-var port, slideFileName = program.file || process.cwd()+'/slides.presentate';
-if (!program.file && !fs.existsSync(slideFileName)) {
-  slideFileName = process.cwd() + '/pslides.js';
+program.file = program.file || process.cwd()+'/slides.presentate';
+if (!program.file && !fs.existsSync(program.file)) {
+  throw new Error('no slides file!');
 }
 
-var slides = slideFileName.match(/.*\.presentate$/) ?
-             fs.readFileSync(slideFileName).toString('utf8') :
-             require(slideFileName);
+var slides = fs.readFileSync(program.file).toString('utf8');
 
-if (typeof slides === 'string') {
-  var split = slides.split(/\n===\n/);
-  if (split.length === 2) {
-    var data = JSON.parse(split[0]);
-    data.slides = split[split.length-1];
-    slides = data;
-  }
+var split = slides.split(/\n===\n/);
+if (split.length === 2) {
+  var data = JSON.parse(split[0]);
+  data.slides = split[split.length-1];
+  slides = data;
+  for (var x in slides)
+    if (!program[x]) program[x] = slides[x];
+} else {
+  program.slides = slides;
 }
 
-if (typeof slides === 'object') {
-  for (var x in slides) program[x] = slides[x];
-}
+if (typeof program.top !== 'string' && typeof program.top !== 'number')
+  program.top = 1;
 
-if (slides.slides) {
-  slides = slides.slides;
-}
+if (typeof program.left !== 'string' && typeof program.left !== 'number')
+  program.left = 3;
 
-var top = parseInt(program.top || 1);
-var left = parseInt(program.left || 3);
+program.top = parseInt(program.top);
+program.left = parseInt(program.left);
 if (program.all) {
-  console.log(presentate.prepareSlides(slides, top, left).join(Array(top+1).join('\n')+'\n---\n'));
+  console.log(presentate.prepareSlides(null, slides, top, left).join(Array(top+1).join('\n')+'\n---\n'));
 } else if (program.telnet) {
-  presentate.telnet(slides, top, left, program.telnet); 
+  presentate.telnet(program);
 } else if (program.html) {
-  var all = presentate.prepareSlides(slides, top, left).join(Array(top+1).join('\n')+'\n---\n');
+  var all = presentate.prepareSlides(null, slides, top, left).join(Array(top+1).join('\n')+'\n---\n');
   presentate.html(all);
 } else {
-  presentate(slides, top, left, process.stdin, process.stdout);
+  presentate(program, process.stdin, process.stdout);
 }
