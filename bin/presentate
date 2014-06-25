@@ -1,7 +1,9 @@
 #!/usr/bin/env node
+
 var presentate = require('../index');
 var program = require('commander');
 var fs = require('fs');
+var path = require('path');
 
 program.version(require('../package').version)
   .usage('[options]')
@@ -15,9 +17,10 @@ program.version(require('../package').version)
   .option('-H --html ', 'generate HTML version of "--all" (add your own CSS)')
   .parse(process.argv);
 
-program.file = program.file || process.cwd()+'/slides.presentate';
-if (!program.file && !fs.existsSync(program.file)) {
-  throw new Error('no slides file!');
+program.file = program.file || path.resolve(process.cwd(), 'slides.presentate');
+if (!program.file || !fs.existsSync(program.file)) {
+  // default to intro presentation
+  program.file = path.resolve(__dirname, '..', 'slides.presentate');
 }
 
 var slides = fs.readFileSync(program.file).toString('utf8');
