@@ -22,6 +22,7 @@
     -f --file [filename]  a slides.js file (default: ./slides.presentate)
     -A --all              show all the slides at once, delimited by "\n---\n"
     -N --notes [port]     telnet notes port number
+    -s --sizing_slide     insert a sizing slide at the beginning
     -H --html             generate HTML version of "--all" (add your own CSS)
 ```
 
