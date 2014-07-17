@@ -19,7 +19,7 @@
     -t --top [num]        lines of padding from the top (default: 1)
     -l --left [num]       columns of padding from the left (default: 3)
     -c --center [WxH]     center in the terminal, with width w and height H
-    -f --file [filename]  a slides.js file (default: ./slides.presentate)
+    -f --file [filename]  a slides file (default: ./slides.presentate)
     -A --all              show all the slides at once, delimited by "\n---\n"
     -N --notes [port]     telnet notes port number
     -s --sizing_slide     insert a sizing slide at the beginning
