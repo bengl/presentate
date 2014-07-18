@@ -45,13 +45,14 @@ if (typeof program.left !== 'string' && typeof program.left !== 'number')
 
 program.top = parseInt(program.top);
 program.left = parseInt(program.left);
-if (program.all) {
-  console.log(presentate.prepareSlides(null, slides, program.top, program.left).join(Array(top+1).join('\n')+'\n---\n'));
+if (program.all || program.html) {
+  var all = presentate.prepareSlides(
+    null, program.slides, program.top, program.left
+  ).join(Array(program.top+1).join('\n')+'\n---\n');
+  if (program.all) console.log(all);
+  else presentate.html(all);
 } else if (program.telnet) {
   presentate.telnet(program);
-} else if (program.html) {
-  var all = presentate.prepareSlides(null, slides, program.top, program.left).join(Array(top+1).join('\n')+'\n---\n');
-  presentate.html(all);
-} else {
+}  else {
   presentate(program, process.stdin, process.stdout);
 }
