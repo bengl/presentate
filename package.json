@@ -4,11 +4,12 @@
   "description": "A command-line and telnet presentation tool.",
   "main": "index.js",
   "dependencies": {
-    "keypress": "~0.2.1",
+    "ansi-html-stream": "0.0.3",
+    "cardinal": "^0.4.4",
     "colors-tmpl": "~0.1.0",
     "commander": "^2.2.0",
     "consolehighlighter": "^0.1.5",
-    "ansi-html-stream": "0.0.3"
+    "keypress": "~0.2.1"
   },
   "bin": "bin/presentate",
   "scripts": {
