@@ -14,6 +14,7 @@ program.version(require('../package').version)
   .option('-f --file [filename]', 'a slides file (default: ./slides.presentate)')
   .option('-A --all', 'show all the slides at once, delimited by "\\n---\\n"')
   .option('-N --notes [port]', 'telnet notes port number')
+  .option('-X --next [port]', 'telnet next slide port number')
   .option('-s --sizing_slide', 'insert a sizing slide at the beginning')
   .option('-H --html ', 'generate HTML version of "--all" (add your own CSS)')
   .parse(process.argv);
